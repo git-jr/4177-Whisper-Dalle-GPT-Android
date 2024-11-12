@@ -29,22 +29,22 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val openAI = OpenAI(BuildConfig.OPENAIKEY)
-
-        lifecycleScope.launch {
-            val images: List<ImageURL> = openAI.imageURL(
-                creation = ImageCreation(
-                    prompt = "Um urso programador",
-                    model = ModelId("dall-e-2"),
-                    n = 1,
-                    size = ImageSize.is1024x1024
-                )
-            )
-
-            images.first().url.let {
-                Log.d("imageAI", it)
-            }
-        }
+//        val openAI = OpenAI(BuildConfig.OPENAIKEY)
+//
+//        lifecycleScope.launch {
+//            val images: List<ImageURL> = openAI.imageURL(
+//                creation = ImageCreation(
+//                    prompt = "Um urso programador",
+//                    model = ModelId("dall-e-3"),
+//                    n = 1,
+//                    size = ImageSize.is1024x1024
+//                )
+//            )
+//
+//            images.first().url.let {
+//                Log.d("imageAI", it)
+//            }
+//        }
 
 //        val chatCompletionRequest = ChatCompletionRequest(
 //            model = ModelId("gpt-4o-mini"),
