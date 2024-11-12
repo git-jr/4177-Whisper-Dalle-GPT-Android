@@ -8,11 +8,18 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.aallam.openai.api.chat.ChatCompletion
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.alura.anotaai.ui.navigation.NavHost
 import com.alura.anotaai.ui.theme.AnotaAITheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 @AndroidEntryPoint
@@ -25,6 +32,20 @@ class MainActivity : ComponentActivity() {
 
         val openAI = OpenAI(BuildConfig.OPENAIKEY)
 
+        val chatCompletionRequest = ChatCompletionRequest(
+            model = ModelId("gpt-4o-mini"),
+            messages = listOf(
+                ChatMessage(
+                    role = ChatRole.User,
+                    content = "Qual o nome do Android 9"
+                )
+            )
+        )
+        lifecycleScope.launch {
+            val message: ChatCompletion = openAI.chatCompletion(chatCompletionRequest)
+            val response = message.choices.first().message.content.toString()
+            Log.d("message", response)
+        }
 
         setContent {
             AnotaAITheme {
