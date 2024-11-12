@@ -1,7 +1,11 @@
 package com.alura.anotaai.ui.notes
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aallam.openai.api.audio.TranscriptionRequest
+import com.aallam.openai.api.file.FileSource
+import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.alura.anotaai.BuildConfig
 import com.alura.anotaai.model.BaseNote
@@ -14,6 +18,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okio.source
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -157,7 +163,18 @@ class NoteViewModel @Inject constructor(
 
     fun transcribeAudio(noteItemAudio: NoteItemAudio) {
         val openAI = OpenAI(BuildConfig.OPENAIKEY)
-        noteItemAudio.
+
+        val audioSource = File(noteItemAudio.link)
+
+        val request = TranscriptionRequest(
+            audio = FileSource(name = audioSource.name, source = audioSource.source()),
+            model = ModelId("whisper-1"),
+        )
+        viewModelScope.launch {
+            val transcription = openAI.transcription(request)
+            val transcriptionText = transcription.text
+            Log.d("transcription", transcriptionText)
+        }
     }
 
 
