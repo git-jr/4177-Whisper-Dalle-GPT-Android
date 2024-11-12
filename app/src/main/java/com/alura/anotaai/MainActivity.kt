@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
+import com.aallam.openai.client.OpenAI
 import com.alura.anotaai.ui.navigation.NavHost
 import com.alura.anotaai.ui.theme.AnotaAITheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,6 +22,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val openAI = OpenAI(BuildConfig.OPENAIKEY)
+
 
         setContent {
             AnotaAITheme {

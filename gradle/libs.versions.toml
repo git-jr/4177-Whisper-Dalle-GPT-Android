@@ -12,6 +12,7 @@ activityCompose = "1.9.3"
 composeBom = "2024.10.01"
 camerax-version = "1.4.0"
 
+openaiClientBom = "3.8.2"
 roomRuntime = "2.6.1"
 viewmodel-compose = "2.8.7"
 navigation-compose = "2.8.3"
@@ -48,6 +49,9 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger-compiler" }
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
+openai-client = { module = "com.aallam.openai:openai-client" }
+openai-client-bom = { module = "com.aallam.openai:openai-client-bom", version.ref = "openaiClientBom" }
 viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodel-compose" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }

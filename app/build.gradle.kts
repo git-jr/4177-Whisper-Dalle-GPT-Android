@@ -93,4 +93,11 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
+
+    // import Kotlin API client BOM
+    implementation (platform(libs.openai.client.bom))
+
+    // define dependencies without versions
+    implementation (libs.openai.client)
+    runtimeOnly (libs.ktor.client.okhttp)
 }
