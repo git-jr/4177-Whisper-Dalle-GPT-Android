@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AnotaAI</string>
+    <string name="take_photo">Tirar foto</string>
+    <string name="take_another">Tirar outra</string>
+    <string name="user_photo">Usar foto</string>
+    <string name="confirm_delete_title">Confirmar exclusão</string>
+    <string name="confirm_delete_note">Tem certeza que deseja excluir essa nota?</string>
+    <string name="yes">Sim</string>
+    <string name="not">Não</string>
+    <string name="write_your_note">Escreva sua nota aqui...</string>
+    <string name="confirm_delete_item">Tem certeza que deseja excluir este item?</string>
+    <string name="error_save_image">Erro ao salvar imagem</string>
+    <string name="aqui_voce_gerencia">Aqui você gerencia suas notas de uma maneira mais ampla. Novas funções disponíveis em breve</string>
+    <string name="notas_cadastradas">Notas cadastradas: %1$s</string>
+    <string name="apagar_todas_as_notas">Apagar todas as notas</string>
+    <string name="tem_certeza_que_deseja_excluir_todas_as_notas">Tem certeza que deseja excluir todas as notas?</string>
+</resources>
