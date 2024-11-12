@@ -302,7 +302,7 @@ fun NoteScreen(
                         viewModel.deleteItemNote(itemNote)
                     },
                     onTranscribeAudio = { noteItemAudio ->
-
+                        viewModel.transcribeAudio(noteItemAudio)
                     }
                 )
             }

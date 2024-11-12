@@ -2,6 +2,8 @@ package com.alura.anotaai.ui.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aallam.openai.client.OpenAI
+import com.alura.anotaai.BuildConfig
 import com.alura.anotaai.model.BaseNote
 import com.alura.anotaai.model.NoteItemAudio
 import com.alura.anotaai.model.NoteItemImage
@@ -151,6 +153,11 @@ class NoteViewModel @Inject constructor(
                 }
             )
         )
+    }
+
+    fun transcribeAudio(noteItemAudio: NoteItemAudio) {
+        val openAI = OpenAI(BuildConfig.OPENAIKEY)
+        noteItemAudio.
     }
 
 

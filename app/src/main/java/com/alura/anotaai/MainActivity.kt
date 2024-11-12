@@ -30,22 +30,22 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val openAI = OpenAI(BuildConfig.OPENAIKEY)
+//        val openAI = OpenAI(BuildConfig.OPENAIKEY)
 
-        val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4o-mini"),
-            messages = listOf(
-                ChatMessage(
-                    role = ChatRole.User,
-                    content = "Qual o nome do Android 9"
-                )
-            )
-        )
-        lifecycleScope.launch {
-            val message: ChatCompletion = openAI.chatCompletion(chatCompletionRequest)
-            val response = message.choices.first().message.content.toString()
-            Log.d("message", response)
-        }
+//        val chatCompletionRequest = ChatCompletionRequest(
+//            model = ModelId("gpt-4o-mini"),
+//            messages = listOf(
+//                ChatMessage(
+//                    role = ChatRole.User,
+//                    content = "Qual o nome do Android 9"
+//                )
+//            )
+//        )
+//        lifecycleScope.launch {
+//            val message: ChatCompletion = openAI.chatCompletion(chatCompletionRequest)
+//            val response = message.choices.first().message.content.toString()
+//            Log.d("message", response)
+//        }
 
         setContent {
             AnotaAITheme {
