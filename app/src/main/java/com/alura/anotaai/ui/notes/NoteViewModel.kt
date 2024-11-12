@@ -162,6 +162,7 @@ class NoteViewModel @Inject constructor(
     }
 
     fun transcribeAudio(noteItemAudio: NoteItemAudio) {
+        showLoading(true)
         val openAI = OpenAI(BuildConfig.OPENAIKEY)
 
         val audioSource = File(noteItemAudio.link)
@@ -174,6 +175,8 @@ class NoteViewModel @Inject constructor(
             val transcription = openAI.transcription(request)
             val transcriptionText = transcription.text
             Log.d("transcription", transcriptionText)
+            updateAudioTranscription(transcriptionText,noteItemAudio.id)
+            showLoading(false)
         }
     }
 
