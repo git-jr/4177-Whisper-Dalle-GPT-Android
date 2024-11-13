@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aallam.openai.api.audio.TranscriptionRequest
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.file.FileSource
 import com.aallam.openai.api.image.ImageCreation
 import com.aallam.openai.api.image.ImageSize
@@ -32,6 +35,8 @@ class NoteViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NoteUiState())
     var uiState = _uiState.asStateFlow()
+
+    private val openAI by lazy { OpenAI(BuildConfig.OPENAIKEY) }
 
     fun getNoteById(noteId: String) {
         viewModelScope.launch {
@@ -166,7 +171,6 @@ class NoteViewModel @Inject constructor(
 
     fun transcribeAudio(noteItemAudio: NoteItemAudio) {
         showLoading(true)
-        val openAI = OpenAI(BuildConfig.OPENAIKEY)
 
         val audioSource = File(noteItemAudio.link)
 
@@ -184,7 +188,6 @@ class NoteViewModel @Inject constructor(
     }
 
     fun generateImage() {
-        val openAI = OpenAI(BuildConfig.OPENAIKEY)
 
         showLoading(true)
         val textNotes: List<String> =
@@ -217,5 +220,32 @@ class NoteViewModel @Inject constructor(
         }
     }
 
+    fun summarize() {
+        showLoading(true)
+        val textNotes: List<String> =
+            _uiState.value.note.listItems.filterIsInstance<NoteItemText>().map { it.content }
+        val audioNotes: List<String> =
+            _uiState.value.note.listItems.filterIsInstance<NoteItemAudio>().map { it.transcription }
+        val title = _uiState.value.note.title
+        val listItems = textNotes + audioNotes
+
+        val prompt = "Resuma essa nota \"$title\" com o conteudo sendo esse: $listItems"
+
+        val chatCompletionRequest = ChatCompletionRequest(
+            model = ModelId("gpt-4o-mini"),
+            messages = listOf(
+                ChatMessage(
+                    role = ChatRole.User,
+                    content = prompt
+                )
+            )
+        )
+
+        viewModelScope.launch {
+            openAI.chatCompletion(chatCompletionRequest).let { response ->
+            }
+        }
+
+    }
 
 }
