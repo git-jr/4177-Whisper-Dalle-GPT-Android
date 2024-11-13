@@ -243,6 +243,9 @@ class NoteViewModel @Inject constructor(
 
         viewModelScope.launch {
             openAI.chatCompletion(chatCompletionRequest).let { response ->
+                updateNoteText(response.choices.first().message.content.toString())
+                addNewItemText()
+                showLoading(false)
             }
         }
 
