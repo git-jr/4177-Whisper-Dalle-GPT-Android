@@ -167,7 +167,7 @@ fun NoteScreen(
                             },
                             onGenerateImage = {
                                 viewModel.showContextMenu(false)
-//                                viewModel.generateImage()
+                                viewModel.generateImage()
                             }
                         )
                     }

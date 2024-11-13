@@ -3,12 +3,10 @@ package com.alura.anotaai.ui.notes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alura.anotaai.OpenAIAPI
-import com.alura.anotaai.media.FileUtils
 import com.alura.anotaai.model.BaseNote
 import com.alura.anotaai.model.NoteItemAudio
 import com.alura.anotaai.model.NoteItemImage
 import com.alura.anotaai.model.NoteItemText
-import com.alura.anotaai.network.DownloadService
 import com.alura.anotaai.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,13 +17,10 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteViewModel @Inject constructor(
     private val noteRepository: NoteRepository,
-    private val downloadService: DownloadService,
-    private val fileUtils: FileUtils
+    private val openAI: OpenAIAPI
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NoteUiState())
     var uiState = _uiState.asStateFlow()
-
-    private val openAI by lazy { OpenAIAPI() }
 
     fun getNoteById(noteId: String) {
         viewModelScope.launch {
@@ -169,39 +164,29 @@ class NoteViewModel @Inject constructor(
         }
     }
 
-    //    fun generateImage() {
-//
-//        showLoading(true)
-//        val textNotes: List<String> =
-//            _uiState.value.note.listItems.filterIsInstance<NoteItemText>().map { it.content }
-//        val audioNotes: List<String> =
-//            _uiState.value.note.listItems.filterIsInstance<NoteItemAudio>().map { it.transcription }
-//        val title = _uiState.value.note.title
-//        val listItems = textNotes + audioNotes
-//
-//        val prompt =
-//            "Crie uma imagem que respresente visualmente essa nota de $title com os itens: $listItems"
-//
-//        viewModelScope.launch {
-//            val images: List<ImageURL> = openAI.imageURL(
-//                creation = ImageCreation(
-//                    prompt = prompt,
-//                    model = ModelId("dall-e-3"),
-//                    n = 1,
-//                    size = ImageSize.is1024x1024
-//                )
-//            )
-//
-//            downloadService.makeDownloadByURL(
-//                images.first().url,
-//                onSaved = {
-//                    addNewItemImage(it)
-//                    showLoading(false)
-//                }
-//            )
-//        }
-//    }
-//
+    fun generateImage() {
+        showLoading(true)
+        val textNotes: List<String> =
+            _uiState.value.note.listItems.filterIsInstance<NoteItemText>().map { it.content }
+        val audioNotes: List<String> =
+            _uiState.value.note.listItems.filterIsInstance<NoteItemAudio>().map { it.transcription }
+        val title = _uiState.value.note.title
+        val listItems = textNotes + audioNotes
+
+        val prompt =
+            "Crie uma imagem que respresente visualmente essa nota de $title com os itens: $listItems"
+
+        viewModelScope.launch {
+            openAI.generateImage(
+                prompt = prompt,
+                onResult = {
+                    addNewItemImage(it)
+                    showLoading(false)
+                }
+            )
+        }
+    }
+
     fun summarize() {
         showLoading(true)
         val textNotes: List<String> =
