@@ -169,7 +169,7 @@ class NoteViewModel @Inject constructor(
         }
     }
 
-//    fun generateImage() {
+    //    fun generateImage() {
 //
 //        showLoading(true)
 //        val textNotes: List<String> =
@@ -202,46 +202,25 @@ class NoteViewModel @Inject constructor(
 //        }
 //    }
 //
-//    fun summarize() {
-//        showLoading(true)
-//        val textNotes: List<String> =
-//            _uiState.value.note.listItems.filterIsInstance<NoteItemText>().map { it.content }
-//        val audioNotes: List<String> =
-//            _uiState.value.note.listItems.filterIsInstance<NoteItemAudio>().map { it.transcription }
-//        val title = _uiState.value.note.title
-//        val listItems = textNotes + audioNotes
-//
-//        val prompt = "Resuma essa nota \"$title\" com o conteudo sendo esse: $listItems"
-//
-//        val chatCompletionRequest = ChatCompletionRequest(
-//            model = ModelId("gpt-4o-mini"),
-//            messages = listOf(
-//                ChatMessage(
-//                    role = ChatRole.User,
-//                    content = prompt
-//                )
-//            )
-//        )
-//
-//        viewModelScope.launch {
-//            openAI.chatCompletion(chatCompletionRequest).let { response ->
-//                val summarizedText = response.choices.first().message.content.toString()
-//                val rawAudio: ByteArray = openAI.speech(
-//                    request = SpeechRequest(
-//                        model = ModelId("tts-1"),
-//                        input = summarizedText,
-//                        voice = Voice.Nova,
-//                    )
-//                )
-//
-//                val (audioPath, audioDuration) = fileUtils.saveAudioInternalStorage(rawAudio)
-//                setAudioProperties(audioPath,audioDuration, summarizedText)
-//                addNewItemAudio()
-//
-//                showLoading(false)
-//            }
-//        }
-//
-//    }
+    fun summarize() {
+        showLoading(true)
+        val textNotes: List<String> =
+            _uiState.value.note.listItems.filterIsInstance<NoteItemText>().map { it.content }
+        val audioNotes: List<String> =
+            _uiState.value.note.listItems.filterIsInstance<NoteItemAudio>().map { it.transcription }
+        val title = _uiState.value.note.title
+        val listItems = textNotes + audioNotes
+
+        val prompt = "Resuma essa nota \"$title\" com o conteudo sendo esse: $listItems"
+
+        viewModelScope.launch {
+            openAI.summarize(prompt) { audioPath, audioDuration, summarizedText ->
+                setAudioProperties(audioPath, audioDuration, summarizedText)
+                addNewItemAudio()
+                showLoading(false)
+            }
+        }
+
+    }
 
 }

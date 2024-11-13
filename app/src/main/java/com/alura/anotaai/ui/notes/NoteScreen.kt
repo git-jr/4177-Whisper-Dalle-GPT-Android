@@ -163,7 +163,7 @@ fun NoteScreen(
                             onDismiss = { viewModel.showContextMenu(false) },
                             onSummarize = {
                                 viewModel.showContextMenu(false)
-//                                viewModel.summarize()
+                                viewModel.summarize()
                             },
                             onGenerateImage = {
                                 viewModel.showContextMenu(false)
