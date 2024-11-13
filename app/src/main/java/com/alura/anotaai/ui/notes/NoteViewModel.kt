@@ -3,7 +3,9 @@ package com.alura.anotaai.ui.notes
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aallam.openai.api.audio.SpeechRequest
 import com.aallam.openai.api.audio.TranscriptionRequest
+import com.aallam.openai.api.audio.Voice
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
@@ -14,6 +16,7 @@ import com.aallam.openai.api.image.ImageURL
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.alura.anotaai.BuildConfig
+import com.alura.anotaai.media.FileUtils
 import com.alura.anotaai.model.BaseNote
 import com.alura.anotaai.model.NoteItemAudio
 import com.alura.anotaai.model.NoteItemImage
@@ -32,6 +35,7 @@ import javax.inject.Inject
 class NoteViewModel @Inject constructor(
     private val noteRepository: NoteRepository,
     private val downloadService: DownloadService,
+    private val fileUtils: FileUtils
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NoteUiState())
     var uiState = _uiState.asStateFlow()
@@ -243,8 +247,19 @@ class NoteViewModel @Inject constructor(
 
         viewModelScope.launch {
             openAI.chatCompletion(chatCompletionRequest).let { response ->
-                updateNoteText(response.choices.first().message.content.toString())
-                addNewItemText()
+                val summarizedText = response.choices.first().message.content.toString()
+                val rawAudio: ByteArray = openAI.speech(
+                    request = SpeechRequest(
+                        model = ModelId("tts-1"),
+                        input = summarizedText,
+                        voice = Voice.Nova,
+                    )
+                )
+
+                val (audioPath, audioDuration) = fileUtils.saveAudioInternalStorage(rawAudio)
+                setAudioProperties(audioPath,audioDuration, summarizedText)
+                addNewItemAudio()
+
                 showLoading(false)
             }
         }
