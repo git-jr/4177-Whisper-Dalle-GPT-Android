@@ -2,7 +2,6 @@ package com.alura.anotaai.ui.notes
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.aallam.openai.api.audio.TranscriptionRequest
 import com.aallam.openai.api.file.FileSource
@@ -179,34 +178,42 @@ class NoteViewModel @Inject constructor(
             val transcription = openAI.transcription(request)
             val transcriptionText = transcription.text
             Log.d("transcription", transcriptionText)
-            updateAudioTranscription(transcriptionText,noteItemAudio.id)
+            updateAudioTranscription(transcriptionText, noteItemAudio.id)
             showLoading(false)
         }
     }
 
-    fun generateImage(){
+    fun generateImage() {
         val openAI = OpenAI(BuildConfig.OPENAIKEY)
 
-        val textNotes: List<String> = _uiState.value.note.listItems.filterIsInstance<NoteItemText>().map { it.content }
-        val audioNotes: List<String> = _uiState.value.note.listItems.filterIsInstance<NoteItemAudio>().map { it.transcription }
+        showLoading(true)
+        val textNotes: List<String> =
+            _uiState.value.note.listItems.filterIsInstance<NoteItemText>().map { it.content }
+        val audioNotes: List<String> =
+            _uiState.value.note.listItems.filterIsInstance<NoteItemAudio>().map { it.transcription }
         val title = _uiState.value.note.title
         val listItems = textNotes + audioNotes
 
-        val prompt = "Crie uma imagem que respresente visualmente essa nota de $title com os itens: $listItems"
+        val prompt =
+            "Crie uma imagem que respresente visualmente essa nota de $title com os itens: $listItems"
 
         viewModelScope.launch {
             val images: List<ImageURL> = openAI.imageURL(
                 creation = ImageCreation(
-                    prompt = "Um urso programador",
+                    prompt = prompt,
                     model = ModelId("dall-e-3"),
                     n = 1,
                     size = ImageSize.is1024x1024
                 )
             )
 
-            images.first().url.let {
-                Log.d("imageAI", it)
-            }
+            downloadService.makeDownloadByURL(
+                images.first().url,
+                onSaved = {
+                    addNewItemImage(it)
+                    showLoading(false)
+                }
+            )
         }
     }
 
